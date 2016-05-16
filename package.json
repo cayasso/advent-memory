@@ -10,6 +10,10 @@
     "advent"
   ],
   "author": "Jonathan Brumley <cayasso@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cayasso/advent-memory.git"
+  },
   "scripts": {
     "test": "make test",
     "prepublish": "make"
