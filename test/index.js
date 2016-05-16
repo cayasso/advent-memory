@@ -1,4 +1,4 @@
-import createEngine from '../index'
+import createEngine from '../src/index'
 
 let engine = createEngine()
 let testEvents = [
