@@ -15,7 +15,7 @@ export default options => {
    * Load entity events.
    *
    * @param {String|Number} id
-   * @param {Function} fn
+   * @return {Promise}
    * @api public
    */
 
@@ -29,15 +29,15 @@ export default options => {
   /**
    * Save events.
    *
-   * @param {Object} event
-   * @param {Function} fn
+   * @param {Array} events
+   * @return {Promise}
    * @api public
    */
 
   function save(events) {
     return new Promise((accept, reject) => {
       setImmediate(() => accept(events.filter(event => {
-        let id = event.id
+        let id = event.entityId
         if (!id) return false
         data[id] = data[id] || []
         return data[id] = [...data[id], event]
