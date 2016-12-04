@@ -1,6 +1,6 @@
 {
   "name": "advent-memory",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Memory engine for advent.",
   "keywords": [
     "store",
