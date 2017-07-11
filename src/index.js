@@ -37,7 +37,7 @@ export default options => {
   function save(events) {
     return new Promise((accept, reject) => {
       setImmediate(() => accept(events.filter(event => {
-        let id = event.entityId
+        let id = event.entityId || event.id
         if (!id) return false
         data[id] = data[id] || []
         return data[id] = [...data[id], event]
