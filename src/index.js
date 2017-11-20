@@ -9,7 +9,8 @@ import 'babel-polyfill'
 import Promise from 'any-promise'
 
 export default options => {
-  let data = {}
+  let seq = 0
+  const data = {}
 
   /**
    * Load entity events.
@@ -21,8 +22,8 @@ export default options => {
 
   function load(id) {
     data[id] = data[id] || []
-    return new Promise((accept, reject) => {
-      setImmediate(() => accept(data[id]))
+    return new Promise((resolve, reject) => {
+      setImmediate(() => resolve(data[id]))
     })
   }
 
@@ -35,11 +36,13 @@ export default options => {
    */
 
   function save(events) {
-    return new Promise((accept, reject) => {
-      setImmediate(() => accept(events.filter(event => {
-        let id = event.entityId || event.id
+    return new Promise((resolve, reject) => {
+      setImmediate(() => resolve(events.filter(event => {
+        event.entity = event.entity || {}
+        const id = event.entity.id || event.id
         if (!id) return false
         data[id] = data[id] || []
+        event.version = seq++
         return data[id] = [...data[id], event]
       }, [])))
     })

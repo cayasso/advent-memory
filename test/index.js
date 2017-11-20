@@ -2,12 +2,12 @@ import createEngine from '../src/index'
 
 let engine = createEngine()
 let testEvents = [
-  { entityId: '1', type: 'created', payload: { a: 1 } },
-  { entityId: '1', type: 'updated', payload: { a: 2 } },
-  { entityId: '1', type: 'tested', payload: { a: 3 } },
-  { entityId: '2', type: 'created', payload: { a: 1 } },
-  { entityId: '3', type: 'created', payload: { a: 2 } },
-  { entityId: '3', type: 'created', payload: { a: 3 } }
+  { entity: { id: '1' }, type: 'created', payload: { a: 1 } },
+  { entity: { id: '1' }, type: 'updated', payload: { a: 2 } },
+  { entity: { id: '1' }, type: 'tested', payload: { a: 3 } },
+  { entity: { id: '2' }, type: 'created', payload: { a: 1 } },
+  { entity: { id: '3' }, type: 'created', payload: { a: 2 } },
+  { entity: { id: '3' }, type: 'created', payload: { a: 3 } }
 ]
 
 describe('advent-memory', () => {
@@ -39,8 +39,8 @@ describe('advent-memory', () => {
       }).catch(done)
     })
 
-    it('should not save events with missing entityId', (done) => {
-      let wrongEvents = [
+    it('should not save events with missing entity', (done) => {
+      const wrongEvents = [
         { type: 'updated', payload: { a: 2 } },
         { type: 'updated', payload: { a: 2 } }
       ]
@@ -62,7 +62,7 @@ describe('advent-memory', () => {
       let id = '1'
       engine.load(id).then(events => {
         events.length.should.eql(3)
-        events.should.eql(testEvents.filter(e => e.entityId === id))
+        events.should.eql(testEvents.filter(e => e.entity.id === id))
         done()
       }).catch(done)
     })
