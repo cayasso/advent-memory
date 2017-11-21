@@ -1,70 +1,79 @@
-import createEngine from '../src/index'
+const should = require('should')
+const createEngine = require('../src/index')
 
-let engine = createEngine()
-let testEvents = [
-  { entity: { id: '1' }, type: 'created', payload: { a: 1 } },
-  { entity: { id: '1' }, type: 'updated', payload: { a: 2 } },
-  { entity: { id: '1' }, type: 'tested', payload: { a: 3 } },
-  { entity: { id: '2' }, type: 'created', payload: { a: 1 } },
-  { entity: { id: '3' }, type: 'created', payload: { a: 2 } },
-  { entity: { id: '3' }, type: 'created', payload: { a: 3 } }
+let engine = null
+const testEvents = [
+  { entity: { id: '1', name: 'test' }, type: 'created', payload: { a: 1 } },
+  { entity: { id: '1', name: 'test' }, type: 'updated', payload: { a: 2 } },
+  { entity: { id: '1', name: 'test' }, type: 'tested', payload: { a: 3 } },
+  { entity: { id: '2', name: 'test' }, type: 'created', payload: { a: 1 } },
+  { entity: { id: '3', name: 'test' }, type: 'created', payload: { a: 2 } },
+  { entity: { id: '3', name: 'test' }, type: 'created', payload: { a: 3 } }
 ]
 
-describe('advent-memory', () => {
+describe('advent-mongodb', () => {
+
+  before(() => {
+    engine = createEngine()
+  })
 
   it('should be a function', () => {
-    createEngine.should.be.a.Function
+    should(createEngine).be.a.Function()
   })
 
   it('should return an object', () => {
-    engine.should.be.an.Object
+    should(engine).be.an.Object()
   })
 
   it('should export the right methods', () => {
-    engine.save.should.be.a.Function
-    engine.load.should.be.a.Function
+    should(engine.save).be.a.Function()
+    should(engine.load).be.a.Function()
   })
 
   describe('save', () => {
 
     it('should return a promise', () => {
-      engine.save([]).then.should.be.a.Function
+      should(engine.save([]).then).be.a.Function()
     })
 
-    it('should save events', (done) => {
-      engine.save(testEvents).then(events => {
-        events.length.should.eql(testEvents.length)
-        events.should.eql(testEvents)
-        done()
-      }).catch(done)
+    it('should save events', async () => {
+      const events = await engine.save(testEvents)
+      should(events.length).eql(testEvents.length)
+      should(events).eql(testEvents)
     })
 
-    it('should not save events with missing entity', (done) => {
+    it('should not save events with missing entity ids', async () => {
       const wrongEvents = [
         { type: 'updated', payload: { a: 2 } },
         { type: 'updated', payload: { a: 2 } }
       ]
-      engine.save(wrongEvents).then(events => {
-        events.length.should.eql(0)
-        events.should.eql([])
-        done()
-      }).catch(done)
+      const events = await engine.save(wrongEvents)
+      should(events.length).eql(0)
+      should(events).eql([])
+    })
+
+    it('should not save events with missing entity name', async () => {
+      const wrongEvents = [
+        { type: 'updated', payload: { a: 2 } },
+        { type: 'updated', payload: { a: 2 } }
+      ]
+      const events = await engine.save(wrongEvents)
+      should(events.length).eql(0)
+      should(events).eql([])
     })
   })
 
   describe('load', () => {
 
     it('should return a promise', () => {
-      engine.load([]).then.should.be.a.Function
+      should(engine.load('1').then).be.a.Function()
     })
 
-    it('should load events by id', (done) => {
-      let id = '1'
-      engine.load(id).then(events => {
-        events.length.should.eql(3)
-        events.should.eql(testEvents.filter(e => e.entity.id === id))
-        done()
-      }).catch(done)
+    it('should load events by id', async () => {
+      const id = '1'
+      const events = await engine.load(id)
+      should(events.length).eql(3)
+      should(events).eql(testEvents.filter(e => e.entity.id === id))
     })
 
   })

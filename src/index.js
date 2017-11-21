@@ -1,16 +1,8 @@
-'use strict';
+'use strict'
 
-import 'babel-polyfill'
-
-/**
- * Module dependencies.
- */
-
-import Promise from 'any-promise'
-
-export default options => {
+const createEntity = () => {
+  const stream = {}
   let seq = 0
-  const data = {}
 
   /**
    * Load entity events.
@@ -21,10 +13,8 @@ export default options => {
    */
 
   function load(id) {
-    data[id] = data[id] || []
-    return new Promise((resolve, reject) => {
-      setImmediate(() => resolve(data[id]))
-    })
+    stream[id] = stream[id] || []
+    return Promise.resolve(stream[id])
   }
 
   /**
@@ -35,18 +25,23 @@ export default options => {
    * @api public
    */
 
-  function save(events) {
-    return new Promise((resolve, reject) => {
-      setImmediate(() => resolve(events.filter(event => {
-        event.entity = event.entity || {}
-        const id = event.entity.id || event.id
-        if (!id) return false
-        data[id] = data[id] || []
-        event.version = seq++
-        return data[id] = [...data[id], event]
-      }, [])))
+  async function save(data) {
+    if (!Array.isArray(data) || data.length === 0) {
+      return []
+    }
+
+    return data.filter(event => {
+      event.entity = event.entity || {}
+      const id = event.entity.id || event.id
+      if (!id) return false
+      stream[id] = stream[id] || []
+      event.version = seq++
+      stream[id] = [...stream[id], event]
+      return true
     })
   }
 
   return { load, save }
 }
+
+module.exports = createEntity
