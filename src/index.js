@@ -1,6 +1,6 @@
 'use strict'
 
-const createEntity = () => {
+const createEngine = () => {
   const events = {}
   let seq = 0
 
@@ -46,4 +46,4 @@ const createEntity = () => {
   return { load, save }
 }
 
-module.exports = createEntity
+module.exports = createEngine
