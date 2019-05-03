@@ -1,5 +1,5 @@
 const should = require('should')
-const createEngine = require('../src/index')
+const createEngine = require('../src')
 
 let engine = null
 const testEvents = [
@@ -12,7 +12,6 @@ const testEvents = [
 ]
 
 describe('advent-mongodb', () => {
-
   before(() => {
     engine = createEngine()
   })
@@ -31,7 +30,6 @@ describe('advent-mongodb', () => {
   })
 
   describe('save', () => {
-
     it('should return a promise', () => {
       should(engine.save([]).then).be.a.Function()
     })
@@ -64,7 +62,6 @@ describe('advent-mongodb', () => {
   })
 
   describe('load', () => {
-
     it('should return a promise', () => {
       should(engine.load('1').then).be.a.Function()
     })
@@ -75,7 +72,5 @@ describe('advent-mongodb', () => {
       should(events.length).eql(3)
       should(events).eql(testEvents.filter(e => e.entity.id === id))
     })
-
   })
-
 })
